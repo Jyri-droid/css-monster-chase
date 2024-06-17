@@ -1,0 +1,19 @@
+:root {
+    --yellow: yellow;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+}
+
+.player {
+    position: absolute;
+    border-radius: 50%;
+    background-color: yellow;
+}
