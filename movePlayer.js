@@ -1,4 +1,4 @@
-const player = {x: 1, y: 1};
+const position = {x: 1, y: 1};
 const grid = {width: playground[0].length, height: playground.length};
 
 // Convert grid position to top and left %
@@ -8,38 +8,62 @@ const getCoordinatesByGridPosition = (x, y) => {
     return {left: left, top: top};
 }
 
+// Assign player width and height based on playground dimensions
+const playerElement = document.getElementById("player");
+playerElement.style.width = 100 / grid.width + "%";
+playerElement.style.height = 100 / grid.height + "%";
+
+
 // Place player on playground
 const positionPlayer = (x, y) => {
     const coordinates = getCoordinatesByGridPosition(x, y);
-    node.style.left = coordinates.left + "%";
-    node.style.top = coordinates.top + "%";
+    playerElement.style.left = coordinates.left + "%";
+    playerElement.style.top = coordinates.top + "%";
 }
+positionPlayer(position.x, position.y);
 
-// Create player
-const playgroundElement = document.getElementById("playground");
-const node = document.createElement("div");
-node.classList.add("player");
-node.style.width = 100 / grid.width + "%";
-node.style.height = 100 / grid.height + "%";
-positionPlayer(player.x, player.y);
-playgroundElement.appendChild(node);
 
+// Moving direction
+let moveHorizontal = 1;
+let moveVertical = 0;
+const speed = 1;
+
+// Key events
 const keyDown = (event) =>  {
     switch (event.key) {
         case "ArrowRight":
-            player.x++;
+            moveHorizontal = speed;
             break;
         case "ArrowLeft":
-            player.x--;
+            moveHorizontal = -speed;
             break;
         case "ArrowUp":
-            player.y++;
+            moveVertical = speed;
             break;
         case "ArrowDown":
-            player.y--;
+            moveVertical = -speed;
+            break;
+        case " ":
+            moveHorizontal = 0;
+            moveVertical = 0;
             break;
     }
-    positionPlayer(player.x, player.y); 
-};
-
+}
 window.addEventListener("keydown", keyDown);
+
+
+const task = (i) => { 
+    setTimeout(() => { 
+        // Add tasks to do
+        console.log(i);
+        position.x += moveHorizontal;
+        positionPlayer(position.x, position.y);
+
+    }, 100 * i); 
+};
+ 
+let i = 0;
+while (i < 100) { 
+    task(i);
+    i++;
+}
