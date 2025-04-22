@@ -11,3 +11,9 @@ const playground = [
     "X------------------X",
     "XXXXXXXXXXXXXXXXXXXX"
 ];
+
+const isPath = (x, y) => {
+    const row = playground[y];
+    const character = row.charAt(x);
+    return character === "-";
+};

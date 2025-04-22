@@ -1,69 +1,74 @@
-const position = {x: 1, y: 1};
-const grid = {width: playground[0].length, height: playground.length};
-
-// Convert grid position to top and left %
-const getCoordinatesByGridPosition = (x, y) => {
-    const left = 100 / grid.width * x;
-    const top = 100 - 100 / grid.height * (y + 1);
-    return {left: left, top: top};
-}
-
-// Assign player width and height based on playground dimensions
-const playerElement = document.getElementById("player");
-playerElement.style.width = 100 / grid.width + "%";
-playerElement.style.height = 100 / grid.height + "%";
+const grid = { width: playground[0].length, height: playground.length };
+const step = { x: 100 / grid.width, y: 100 / grid.height };
 
 
-// Place player on playground
-const positionPlayer = (x, y) => {
-    const coordinates = getCoordinatesByGridPosition(x, y);
-    playerElement.style.left = coordinates.left + "%";
-    playerElement.style.top = coordinates.top + "%";
-}
-positionPlayer(position.x, position.y);
+const playerTo = (x, y) => {
+    player.style.left = x * step.x + "%";
+    player.style.top = y * step.y  + "%";
+};
+
+// Assign player
+const player = document.getElementById("player");
+player.style.width = step.x + "%";
+player.style.height = step.y + "%";
+const playerPosition = { x: 1, y: 1 };
+playerTo(playerPosition.x, playerPosition.y);
 
 
-// Moving direction
-let moveHorizontal = 1;
-let moveVertical = 0;
-const speed = 1;
+console.log(isPath(1,1));
+
+// Movement
+const move = { x: 0, y: 0 };
 
 // Key events
 const keyDown = (event) =>  {
     switch (event.key) {
         case "ArrowRight":
-            moveHorizontal = speed;
+            if (isPath(playerPosition.x + 1, playerPosition.y)) {
+                move.x = 1;
+                move.y = 0;
+            }
             break;
         case "ArrowLeft":
-            moveHorizontal = -speed;
+            if (isPath(playerPosition.x - 1, playerPosition.y)) {
+                move.x = -1;
+                move.y = 0;
+
+            }
             break;
         case "ArrowUp":
-            moveVertical = speed;
+            if (isPath(playerPosition.x, playerPosition.y - 1)) {
+                move.x = 0;
+                move.y = -1;
+            }
             break;
         case "ArrowDown":
-            moveVertical = -speed;
+            if (isPath(playerPosition.x, playerPosition.y + 1)) {
+                move.x = 0;
+                move.y = 1;
+            }
             break;
         case " ":
-            moveHorizontal = 0;
-            moveVertical = 0;
+            move.x = 0;
+            move.y = 0;
             break;
     }
 }
 window.addEventListener("keydown", keyDown);
 
-
 const task = (i) => { 
     setTimeout(() => { 
         // Add tasks to do
-        console.log(i);
-        position.x += moveHorizontal;
-        positionPlayer(position.x, position.y);
-
-    }, 100 * i); 
+        playerPosition.x += move.x; 
+        playerPosition.y += move.y;
+        playerTo(playerPosition.x, playerPosition.y);
+    }, 200 * i); 
 };
- 
+
+let playerIsAlive = true;
 let i = 0;
-while (i < 100) { 
+while (playerIsAlive) {
     task(i);
     i++;
+    if (i > 1000000) { playerIsAlive = false };
 }
